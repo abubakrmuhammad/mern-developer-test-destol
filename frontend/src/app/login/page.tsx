@@ -4,6 +4,8 @@ import { useLogin } from "@/lib/api/hooks/auth/auth.mutations";
 import { parseApiErrorMessage } from "@/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button, Container, Paper, Title, Text } from "@mantine/core";
+import { notifications } from "@mantine/notifications";
+import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { PasswordInput, TextInput } from "react-hook-form-mantine";
 import { z } from "zod";
@@ -16,6 +18,8 @@ const loginFormSchema = z.object({
 type LoginFormSchema = z.infer<typeof loginFormSchema>;
 
 function LoginPage() {
+  const router = useRouter();
+
   const { formState, control, ...form } = useForm<LoginFormSchema>({
     defaultValues: {
       email: "",
@@ -31,6 +35,14 @@ function LoginPage() {
 
     try {
       await loginMutation.mutateAsync({ email, password });
+
+      notifications.show({
+        title: "Success!",
+        message: "You are now logged in",
+        color: "green",
+      });
+
+      router.replace("/");
     } catch (e) {
       const message = parseApiErrorMessage(e);
 

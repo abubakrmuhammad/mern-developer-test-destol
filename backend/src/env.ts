@@ -12,10 +12,6 @@ const env = z.object({
     .min(1)
     .transform((d) => parseDuration(d))
     .refine((n) => !!n),
-  JWT_COOKIE_EXPIRES_IN: z
-    .string()
-    .transform((d) => parseDuration(d))
-    .refine((n) => !!n),
   PORT: z
     .string()
     .optional()

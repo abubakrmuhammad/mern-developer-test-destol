@@ -35,6 +35,9 @@ async function $fetch<T extends ResponseType = "json">(
   if (options.method !== "GET" && !headers.get("Content-Type"))
     headers.append("Content-Type", "application/json");
 
+  const jwt = localStorage.getItem("jwt");
+  if (jwt) headers.append("Authorization", "Bearer " + JSON.parse(jwt));
+
   const response = await fetch(`${path}`, {
     ...options,
     headers,

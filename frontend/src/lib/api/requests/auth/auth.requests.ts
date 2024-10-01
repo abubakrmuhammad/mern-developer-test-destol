@@ -15,3 +15,19 @@ export async function login(params: LoginRequestParams) {
 
   return data;
 }
+
+export async function logout() {
+  const response = await $fetch(`${BASE_SERVICE_URL}/logout`);
+
+  const data = parseResponseData(response, authResponseSchemas.logout);
+
+  return data;
+}
+
+export async function getMe() {
+  const response = await $fetch(`${BASE_SERVICE_URL}/me`);
+
+  const data = parseResponseData(response, authResponseSchemas.getMe);
+
+  return data;
+}

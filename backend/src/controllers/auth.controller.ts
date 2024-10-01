@@ -3,10 +3,7 @@ import ApiError from "@/lib/ApiError";
 import catchAsync from "@/lib/catchAsync";
 import { ValidRequest } from "@/lib/validateRequest";
 import db from "@/prisma/db";
-import {
-  loginSchema,
-  logoutSchema,
-} from "@/routes/schemas/auth.routes.schemas";
+import { loginSchema } from "@/routes/schemas/auth.routes.schemas";
 import { AuthenticatedRequest } from "@/types/shared";
 import { createSendToken } from "@/utils";
 import bcrypt from "bcrypt";
@@ -38,6 +35,7 @@ export const login = catchAsync(
 
       createSendToken(user, 200, req, res);
     } catch (error: any) {
+      console.log(error);
       if (error instanceof ApiError) throw error;
 
       throw new ApiError(400, "Something went wrong when logging in");
@@ -45,20 +43,14 @@ export const login = catchAsync(
   },
 );
 
-export const logout = catchAsync(
-  (req: ValidRequest<typeof logoutSchema>, res: Response) => {
-    res.cookie("jwt", "logged out", {
-      expires: new Date(Date.now() + 1 * 1000),
-      httpOnly: true,
-    });
-
-    res.status(200).json({ success: true });
-  },
-);
-
 export const getMe = catchAsync(
   async (req: AuthenticatedRequest, res: Response) => {
-    res.status(200).json(req.user);
+    if (!req.user) throw new ApiError(401, "You are not logged in");
+
+    res.status(200).json({
+      success: true,
+      data: req.user,
+    });
   },
 );
 
@@ -67,7 +59,10 @@ export const protect = async (
   res: Response,
   next: NextFunction,
 ) => {
-  const token = req.cookies.jwt;
+  const { authorization } = req.headers;
+  const token = authorization?.startsWith("Bearer")
+    ? authorization.split(" ")[1]
+    : null;
 
   if (!token)
     return next(

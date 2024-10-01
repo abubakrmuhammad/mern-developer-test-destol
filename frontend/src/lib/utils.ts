@@ -2,6 +2,7 @@ import { env } from "@/env";
 import { UseQueryResult } from "@tanstack/react-query";
 import { z } from "zod";
 import { FetchResponse, ResponseData } from "./fetch";
+import { useLocalStorage } from "@mantine/hooks";
 
 export const BACKEND_HOSTNAME = env.NEXT_PUBLIC_BACKEND_API_URL;
 export const BACKEND_API_BASE_URL = `${BACKEND_HOSTNAME}/api/v1` as const;
@@ -103,3 +104,9 @@ export function parseApiErrorMessage(
  */
 export type QueryData<T extends (...args: any) => any> =
   ReturnType<T> extends UseQueryResult<infer R, any> ? R : never;
+
+export function useJwtLocalStorage() {
+  const [token, setToken, removeToken] = useLocalStorage({ key: "jwt" });
+
+  return { token, setToken, removeToken };
+}

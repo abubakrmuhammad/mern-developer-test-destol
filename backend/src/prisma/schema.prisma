@@ -8,14 +8,15 @@ generator client {
 }
 
 model Car {
-  id        String     @id @default(auto()) @map("_id") @db.ObjectId
-  title     String
-  body      String
-  owner     User       @relation(fields: [onwerId], references: [id], onDelete: Cascade)
-  onwerId   String     @unique @db.ObjectId
-  comments  CarImage[]
-  createdAt DateTime   @default(now())
-  updatedAt DateTime   @updatedAt
+  id          String     @id @default(auto()) @map("_id") @db.ObjectId
+  model       String
+  price       Int
+  phoneNumber String
+  owner       User       @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  ownerId     String     @unique @db.ObjectId
+  images      CarImage[]
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
 }
 
 model User {
@@ -23,7 +24,7 @@ model User {
   email     String   @unique
   password  String
   car       Car?
-  carId     String   @unique @db.ObjectId
+  carId     String?  @unique @db.ObjectId
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }

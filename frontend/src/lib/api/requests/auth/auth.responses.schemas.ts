@@ -3,20 +3,22 @@ import { z } from "zod";
 const authResponseSchemas = {
   login: z.object({
     success: z.boolean(),
-    status: z.string(),
-    message: z.string(),
+    token: z.string(),
     data: z.object({
-      token: z.string(),
-      user: z.object({
-        id: z.string(),
-        username: z.string(),
-        email: z.string(),
-        firstName: z.string(),
-        lastName: z.string(),
-        phone: z.string(),
-        isActive: z.boolean(),
-        isAdmin: z.boolean(),
-      }),
+      id: z.string(),
+      email: z.string(),
+      createdAt: z.string(),
+    }),
+  }),
+  logout: z.object({
+    success: z.boolean(),
+  }),
+  getMe: z.object({
+    success: z.boolean(),
+    data: z.object({
+      id: z.string(),
+      email: z.string(),
+      createdAt: z.string(),
     }),
   }),
 };

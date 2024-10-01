@@ -19,12 +19,6 @@ export function createSendToken(
 ) {
   const token = signTokenWithId(user.id);
 
-  res.cookie("jwt", token, {
-    expires: new Date(Date.now() + parsedEnv.JWT_COOKIE_EXPIRES_IN!),
-    httpOnly: true,
-    secure: req.secure || req.headers["x-forwarded-proto"] === "https",
-  });
-
   // @ts-expect-error password is not optional
   delete user.password;
 
