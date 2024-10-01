@@ -1,6 +1,10 @@
 "use client";
 
-import { useUpsertCar } from "@/lib/api/hooks/cars/cars.mutations";
+import { env } from "@/env";
+import {
+  useUploadCarImages,
+  useUpsertCar,
+} from "@/lib/api/hooks/cars/cars.mutations";
 import { useGetMyCar } from "@/lib/api/hooks/cars/cars.queries";
 import { parseApiErrorMessage } from "@/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -56,10 +60,10 @@ function HomePage() {
   }, [carData]);
 
   const upsertCarMutation = useUpsertCar();
+  const uploadCarImagesMutation = useUploadCarImages();
 
   const onSubmit = async (data: CarFormSchema) => {
-    const { model, price, phoneNumber, maxNumberOfPictures, carPictures } =
-      data;
+    const { model, price, phoneNumber, carPictures } = data;
 
     try {
       await upsertCarMutation.mutateAsync({
@@ -67,6 +71,8 @@ function HomePage() {
         price,
         phoneNumber,
       });
+
+      await uploadCarImagesMutation.mutateAsync(carPictures);
 
       notifications.show({
         title: "Success!",
@@ -153,6 +159,10 @@ function HomePage() {
                 />
               )}
             />
+
+            <Text c="dimmed" size="xs" mt={-3}>
+              Max {form.watch("maxNumberOfPictures")} pictures
+            </Text>
 
             <Flex justify="center" gap="md" wrap="wrap">
               {form

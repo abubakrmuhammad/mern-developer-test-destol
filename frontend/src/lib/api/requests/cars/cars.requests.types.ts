@@ -3,3 +3,7 @@ export type UpserCarParams = {
   price: number;
   phoneNumber: string;
 };
+
+export type UploadCarImagesParams = {
+  images: File[];
+};

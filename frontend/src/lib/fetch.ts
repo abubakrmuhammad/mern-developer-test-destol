@@ -25,6 +25,7 @@ async function $fetch<T extends ResponseType = "json">(
   options?: RequestInit & {
     method?: RequestMethod;
     responseType?: T;
+    formData?: boolean;
   },
 ): Promise<FetchResponse<T>> {
   if (!options) options = { method: "GET" };
@@ -32,7 +33,11 @@ async function $fetch<T extends ResponseType = "json">(
 
   const headers = new Headers(options.headers);
 
-  if (options.method !== "GET" && !headers.get("Content-Type"))
+  if (
+    options.method !== "GET" &&
+    !headers.get("Content-Type") &&
+    !options.formData
+  )
     headers.append("Content-Type", "application/json");
 
   const jwt = localStorage.getItem("jwt");

@@ -11,3 +11,15 @@ export function useUpsertCar() {
     },
   });
 }
+
+export function useUploadCarImages() {
+  return useMutation({
+    mutationFn: async (params: File[]) => {
+      const response = await apiClient.cars.uploadCarPictures({
+        images: params,
+      });
+
+      return response;
+    },
+  });
+}

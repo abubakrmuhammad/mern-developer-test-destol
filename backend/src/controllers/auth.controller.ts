@@ -35,7 +35,6 @@ export const login = catchAsync(
 
       createSendToken(user, 200, req, res);
     } catch (error: any) {
-      console.log(error);
       if (error instanceof ApiError) throw error;
 
       throw new ApiError(400, "Something went wrong when logging in");

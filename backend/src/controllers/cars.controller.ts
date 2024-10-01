@@ -8,7 +8,6 @@ import {
   upsertCarSchema,
 } from "@/routes/schemas/cars.routes.schemas";
 import { Response } from "express";
-import multer from "multer";
 
 export const upsertCar = catchAsync(
   async (
@@ -48,6 +47,7 @@ export const getMyCar = catchAsync(
     try {
       const car = await db.car.findUnique({
         where: { ownerId: userId },
+        include: { images: true },
       });
 
       return res.status(200).json({
@@ -85,10 +85,15 @@ export const uploadCarPictures = catchAsync(
         })),
       });
 
+      const carWithImages = await db.car.findUnique({
+        where: { id: car.id },
+        include: { images: true },
+      });
+
       return res.status(200).json({
         success: true,
         message: "Car successfully updated",
-        data: car,
+        data: carWithImages,
       });
     } catch (error: any) {
       if (error instanceof ApiError) throw error;
